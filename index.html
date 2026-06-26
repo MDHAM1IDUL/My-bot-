@@ -8,7 +8,7 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-        * { font-family: 'Inter', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
+        * { font-family: 'Inter', 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif; margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #0f0f1a; color: #ffffff; min-height: 100vh; padding: 12px; }
         .main-container { max-width: 440px; margin: 0 auto; background: linear-gradient(145deg, #16162e, #1a1a3e); border-radius: 28px; padding: 20px; box-shadow: 0 25px 80px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.05); }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.06); }
@@ -41,7 +41,7 @@
         .market-card .coin-rate { font-size: 26px; font-weight: 900; color: #f59e0b; margin-top: 6px; text-shadow: 0 0 30px rgba(245, 158, 11, 0.1); }
         .market-card .coin-per { font-size: 10px; color: #64748b; margin-top: 2px; }
         .sell-btn { width: 100%; padding: 16px; background: linear-gradient(135deg, #f59e0b, #f97316); border: none; border-radius: 16px; color: white; font-weight: 800; font-size: 16px; cursor: pointer; margin: 16px 0 12px 0; transition: all 0.3s; box-shadow: 0 4px 30px rgba(245, 158, 11, 0.35); }
-        .sell-btn::after { content: ' '; }
+        .sell-btn::after { content: ' →'; }
         .sell-btn:active { transform: scale(0.97); }
         .buy-stop-badge { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; padding: 10px 16px; border-radius: 14px; text-align: center; font-weight: 800; font-size: 14px; margin: 12px 0; box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3); }
         .history-section { margin-top: 20px; }
@@ -119,12 +119,14 @@
         .duplicate-warning { background: #ef444420; border: 1px solid #ef4444; color: #ef4444; padding: 8px 12px; border-radius: 10px; font-size: 12px; margin-bottom: 10px; display: none; }
         .success-msg { background: #22c55e20; border: 1px solid #22c55e; color: #22c55e; padding: 8px 12px; border-radius: 10px; font-size: 12px; margin-bottom: 10px; display: none; }
         .fee-info { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.2); border-radius: 10px; padding: 8px 12px; font-size: 11px; color: #f59e0b; margin-top: 8px; text-align: center; }
+        .no-coins-msg { text-align: center; padding: 20px; color: #64748b; }
+        .no-coins-msg .big-icon { font-size: 48px; display: block; margin-bottom: 10px; }
     </style>
 </head>
 <body>
     <div class="main-container">
         <div class="header">
-            <h1> Pro_Dan</h1>
+            <h1>⚡ Pro_Dan</h1>
             <div class="user-info">
                 <div class="user-details">
                     <div class="name" id="user-name">@Guest</div>
@@ -134,22 +136,28 @@
             </div>
         </div>
 
-        <button class="channel-btn" onclick="joinChannel()"> Join Official Channel</button>
+        <button class="channel-btn" onclick="joinChannel()">📢 Join Official Channel</button>
 
         <button class="secret-admin-btn" onclick="openAdminPassword()">
-            <span class="icon"></span> System Settings 
-            <span class="hint"> v2.0</span>
+            <span class="icon">⚙️</span> System Settings 
+            <span class="hint">• v2.0</span>
         </button>
 
-        <div class="section-title"> Live Market Rates</div>
-        <div class="market-grid" id="market-grid">Loading...</div>
+        <div class="section-title">📊 Live Market Rates</div>
+        <div class="market-grid" id="market-grid">
+            <div style="grid-column:1/-1; text-align:center; padding:30px; color:#64748b;">
+                <div style="font-size:48px; margin-bottom:10px;">📭</div>
+                <p>No coins available</p>
+                <p style="font-size:12px; margin-top:5px;">Please add coins from System Settings</p>
+            </div>
+        </div>
 
-        <div class="buy-stop-badge" id="buy-stop-badge" style="display: none;"> BUY STOP</div>
+        <div class="buy-stop-badge" id="buy-stop-badge" style="display: none;">🔴 BUY STOP</div>
 
-        <button class="sell-btn" onclick="openSell()"> Sell Coins</button>
+        <button class="sell-btn" onclick="openSell()">💰 Sell Coins</button>
 
         <div class="history-section">
-            <div class="section-title"> Recent History</div>
+            <div class="section-title">📜 Recent History</div>
             <div class="history-table">
                 <table>
                     <thead><tr><th>Date</th><th>Coin</th><th>Amount</th><th>Status</th></tr></thead>
@@ -163,10 +171,12 @@
 
     <div class="modal-overlay" id="sell-modal">
         <div class="modal">
-            <h3> Sell Coins</h3>
+            <h3>💰 Sell Coins</h3>
             <div class="form-group">
                 <label>Select Coin</label>
-                <select id="sell-coin-select"></select>
+                <select id="sell-coin-select">
+                    <option value="">No coins available</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>Live Selling Rate</label>
@@ -177,30 +187,30 @@
             </div>
             <div id="sell-send-to" style="display:none;">
                 <div class="send-to-box">
-                    <div class="label"> Send Coins To</div>
+                    <div class="label">📤 Send Coins To</div>
                     <div class="username" id="sell-send-to-username">-</div>
-                    <div class="hint"> Copy this username and transfer coins in the game.</div>
+                    <div class="hint">📋 Copy this username and transfer coins in the game.</div>
                 </div>
             </div>
             <div class="form-group" id="coupon-group" style="display:none;">
-                <label> Coupon Code</label>
+                <label>🎫 Coupon Code</label>
                 <input type="text" placeholder="Enter coupon code..." id="coupon-input">
             </div>
             <div class="form-group">
-                <label> Upload Screenshot</label>
+                <label>📸 Upload Screenshot</label>
                 <div class="file-upload" onclick="document.getElementById('file-input').click()">
-                    <div style="font-size:28px; margin-bottom:4px;"></div>
+                    <div style="font-size:28px; margin-bottom:4px;">📤</div>
                     <div style="color:#94a3b8; font-size:13px;">Choose File</div>
                     <div class="filename" id="file-name">No file chosen</div>
                     <input type="file" id="file-input" style="display:none;" accept="image/*" onchange="handleFileSelect(event)">
                 </div>
             </div>
             <div class="form-group">
-                <label id="amount-label"> Amount to Sell (MIN 20000)</label>
+                <label id="amount-label">💰 Amount to Sell (MIN 20000)</label>
                 <input type="number" id="amount-input" placeholder="20000" min="20000" value="20000">
             </div>
             <div class="form-group">
-                <label> Payment Method</label>
+                <label>💳 Payment Method</label>
                 <select id="payment-method">
                     <option value="bKash">bKash</option>
                     <option value="Nagad">Nagad</option>
@@ -217,43 +227,43 @@
                 <input type="text" id="payment-input" placeholder="01XXXXXXXXX or Binance ID">
             </div>
             <div class="form-group" id="username-group" style="display:none;">
-                <label> Your Username (Sender)</label>
+                <label>👤 Your Username (Sender)</label>
                 <input type="text" placeholder="@username or ID" id="sender-username">
                 <div style="font-size:10px; color:#64748b; margin-top:4px;">Enter the username from which you sent the coins.</div>
             </div>
-            <div class="fee-info"> Withdrawal Fee: 5 will be deducted from your total</div>
-            <button class="submit-btn" onclick="submitSell()">Submit Order </button>
+            <div class="fee-info">💰 Withdrawal Fee: 5৳ will be deducted from your total</div>
+            <button class="submit-btn" onclick="submitSell()">Submit Order ✓</button>
             <button class="close-btn" onclick="closeSell()">Close</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="password-modal">
         <div class="modal">
-            <span class="admin-lock-icon"></span>
+            <span class="admin-lock-icon">🔐</span>
             <h3 style="text-align:center;">System Access</h3>
             <p style="color:#94a3b8; text-align:center; font-size:14px; margin-bottom:20px;">Enter system password to continue</p>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" class="password-input" id="admin-password" placeholder="" maxlength="10" autofocus>
+                <input type="password" class="password-input" id="admin-password" placeholder="••••" maxlength="10" autofocus>
             </div>
-            <button class="submit-btn" onclick="verifyPassword()">Unlock </button>
+            <button class="submit-btn" onclick="verifyPassword()">Unlock 🔓</button>
             <button class="close-btn" onclick="closePassword()">Cancel</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="admin-modal">
         <div class="modal">
-            <h3> System Control</h3>
+            <h3>⚙️ System Control</h3>
             <div class="admin-tabs">
-                <button class="active" id="tab-rates-btn" onclick="switchTab('rates')"> Coins</button>
-                <button class="inactive" id="tab-orders-btn" onclick="switchTab('orders')"> Requests</button>
+                <button class="active" id="tab-rates-btn" onclick="switchTab('rates')">📊 Coins</button>
+                <button class="inactive" id="tab-orders-btn" onclick="switchTab('orders')">📋 Requests</button>
             </div>
             <div id="admin-rates">
-                <div class="success-msg" id="success-msg"> Done!</div>
-                <div class="duplicate-warning" id="duplicate-warning"> Duplicate coins detected! Click "Remove Duplicates" below.</div>
+                <div class="success-msg" id="success-msg">✅ Done!</div>
+                <div class="duplicate-warning" id="duplicate-warning">⚠️ Duplicate coins detected! Click "Remove Duplicates" below.</div>
                 <div class="form-group">
                     <label>Coin Name</label>
-                    <input type="text" id="admin-coin-name" placeholder="e.g., NIVA" value="">
+                    <input type="text" id="admin-coin-name" placeholder="e.g., NIVA" value="NIVA">
                 </div>
                 <div class="form-group">
                     <label>Rate (per 1000)</label>
@@ -262,39 +272,41 @@
                 <div class="form-group">
                     <label>Status</label>
                     <select id="admin-coin-status">
-                        <option value="active"> Active</option>
-                        <option value="buy"> Buy Stop</option>
-                        <option value="closed"> Closed</option>
+                        <option value="active">🟢 Active</option>
+                        <option value="buy">🔴 Buy Stop</option>
+                        <option value="closed">🟡 Closed</option>
                     </select>
                 </div>
                 <div class="form-group">
                     <label>Send To (Username)</label>
-                    <input type="text" id="admin-send-to" placeholder="victoria.anderson1096">
-                    <div style="font-size:10px; color:#64748b; margin-top:4px;"> This username will show in "Send Coins To"</div>
+                    <input type="text" id="admin-send-to" placeholder="victoria.anderson1096" value="victoria.anderson1096">
+                    <div style="font-size:10px; color:#64748b; margin-top:4px;">💡 This username will show in "Send Coins To"</div>
                 </div>
                 <div class="form-group">
                     <label>Minimum Amount</label>
                     <input type="number" id="admin-min-amount" placeholder="20000" value="20000">
                 </div>
                 <div class="form-group">
-                    <label>Withdrawal Fee ()</label>
+                    <label>Withdrawal Fee (৳)</label>
                     <input type="number" id="admin-fee-amount" placeholder="5" value="5" step="0.5">
-                    <div style="font-size:10px; color:#64748b; margin-top:4px;"> This fee will be deducted from each withdrawal</div>
+                    <div style="font-size:10px; color:#64748b; margin-top:4px;">💡 This fee will be deducted from each withdrawal</div>
                 </div>
-                <button class="update-btn" onclick="updateCoin()"> Add / Update Coin</button>
+                <button class="update-btn" onclick="updateCoin()">➕ Add / Update Coin</button>
                 <hr>
                 <div class="form-group">
-                    <label> Manage Coins</label>
-                    <div id="coin-list-container" style="max-height:200px; overflow-y:auto; margin-top:8px;"></div>
+                    <label>📋 Manage Coins</label>
+                    <div id="coin-list-container" style="max-height:200px; overflow-y:auto; margin-top:8px;">
+                        <p style="color:#64748b; text-align:center; padding:10px;">No coins added yet. Add a coin above.</p>
+                    </div>
                 </div>
-                <button class="update-btn secondary" onclick="removeDuplicates()" style="margin-top:6px;"> Remove Duplicates</button>
-                <button class="delete-btn" onclick="deleteAllCoins()"> Delete All Coins</button>
+                <button class="update-btn secondary" onclick="removeDuplicates()" style="margin-top:6px;">🔄 Remove Duplicates</button>
+                <button class="delete-btn" onclick="deleteAllCoins()">🗑️ Delete All Coins</button>
                 <hr>
                 <div class="form-group">
                     <label>Selling Status</label>
                     <select id="admin-selling-status">
-                        <option value="true"> Open</option>
-                        <option value="false"> Closed</option>
+                        <option value="true">🟢 Open</option>
+                        <option value="false">🔴 Closed</option>
                     </select>
                 </div>
                 <button class="update-btn secondary" onclick="updateSellingStatus()">Update Status</button>
@@ -307,276 +319,310 @@
             <button class="close-btn" onclick="closeAdmin()">Close</button>
         </div>
     </div>
-
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot as onSnapshotCollection, deleteField } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+    import { getFirestore, doc, onSnapshot, setDoc, updateDoc, collection, addDoc, query, orderBy, onSnapshot as onSnapshotCollection, deleteField } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCEd8rL6hQaZ9xbYVSLiyyw5SJGa76oT1c",
-            authDomain: "coin-75b34.firebaseapp.com",
-            projectId: "coin-75b34",
-            storageBucket: "coin-75b34.firebasestorage.app",
-            messagingSenderId: "849615161114",
-            appId: "1:849615161114:web:0426a4821adc8d2b618ea3",
-            measurementId: "G-F8CL2P1VYE"
-        };
+    const firebaseConfig = {
+        apiKey: "AIzaSyCEd8rL6hQaZ9xbYVSLiyyw5SJGa76oT1c",
+        authDomain: "coin-75b34.firebaseapp.com",
+        projectId: "coin-75b34",
+        storageBucket: "coin-75b34.firebasestorage.app",
+        messagingSenderId: "849615161114",
+        appId: "1:849615161114:web:0426a4821adc8d2b618ea3",
+        measurementId: "G-F8CL2P1VYE"
+    };
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
-        const ADMIN_PASSWORD = "1";
-        let marketData = {};
-        let isSellingOpen = true;
-        let currentUser = null;
-        let orders = [];
-        let coinKeys = [];
-        let coinSendTo = {};
-        let withdrawalFee = 5;
+    const ADMIN_PASSWORD = "1";
+    let marketData = {};
+    let isSellingOpen = true;
+    let currentUser = null;
+    let orders = [];
+    let coinKeys = [];
+    let coinSendTo = {};
+    let withdrawalFee = 5;
 
-        try {
-            const tg = window.Telegram.WebApp;
-            tg.ready();
-            tg.expand();
-            const user = tg.initDataUnsafe?.user || {};
-            currentUser = user;
-            const firstName = user.first_name || 'Guest';
-            const username = user.username || 'Guest';
-            const userId = user.id || '000000';
-            document.getElementById('user-name').textContent = '@' + username;
-            document.getElementById('user-avatar').textContent = firstName.charAt(0).toUpperCase();
-            document.getElementById('user-id').textContent = 'ID: ' + userId.toString().slice(0, 5) + '...';
-        } catch(e) {}
+    try {
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand();
+        const user = tg.initDataUnsafe?.user || {};
+        currentUser = user;
+        const firstName = user.first_name || 'Guest';
+        const username = user.username || 'Guest';
+        const userId = user.id || '000000';
+        document.getElementById('user-name').textContent = '@' + username;
+        document.getElementById('user-avatar').textContent = firstName.charAt(0).toUpperCase();
+        document.getElementById('user-id').textContent = 'ID: ' + userId.toString().slice(0, 5) + '...';
+    } catch(e) {}
 
-        onSnapshot(doc(db, "rates", "market"), (doc) => {
-            if (doc.exists()) {
-                const data = doc.data();
-                marketData = data;
-                isSellingOpen = data.isSellingOpen !== undefined ? data.isSellingOpen : true;
-                if (data.withdrawalFee !== undefined) {
-                    withdrawalFee = data.withdrawalFee;
-                    document.getElementById('admin-fee-amount').value = withdrawalFee;
-                }
-                let rawKeys = Object.keys(data).filter(key => key !== 'isSellingOpen' && key !== 'withdrawalFee' && !key.includes('_status') && !key.includes('_sendTo'));
-                coinSendTo = {};
-                rawKeys.forEach(key => {
-                    const sendToKey = key + '_sendTo';
-                    if (data[sendToKey]) { coinSendTo[key] = data[sendToKey]; } else { coinSendTo[key] = 'N/A'; }
-                });
-                let seen = new Set();
-                coinKeys = [];
-                rawKeys.forEach(key => {
-                    let upperKey = key.toUpperCase();
-                    if (!seen.has(upperKey)) { seen.add(upperKey); coinKeys.push(key); }
-                });
-                if (rawKeys.length !== coinKeys.length) {
-                    document.getElementById('duplicate-warning').style.display = 'block';
-                } else {
-                    document.getElementById('duplicate-warning').style.display = 'none';
-                }
-                updateMarket();
-                updateSellModal();
-                updateCoinList();
+    onSnapshot(doc(db, "rates", "market"), (doc) => {
+        if (doc.exists()) {
+            const data = doc.data();
+            marketData = data;
+            isSellingOpen = data.isSellingOpen !== undefined ? data.isSellingOpen : true;
+            if (data.withdrawalFee !== undefined) {
+                withdrawalFee = data.withdrawalFee;
+                document.getElementById('admin-fee-amount').value = withdrawalFee;
             }
+            let rawKeys = Object.keys(data).filter(key => key !== 'isSellingOpen' && key !== 'withdrawalFee' && !key.includes('_status') && !key.includes('_sendTo'));
+            coinSendTo = {};
+            rawKeys.forEach(key => {
+                const sendToKey = key + '_sendTo';
+                if (data[sendToKey]) { coinSendTo[key] = data[sendToKey]; } else { coinSendTo[key] = 'N/A'; }
+            });
+            let seen = new Set();
+            coinKeys = [];
+            rawKeys.forEach(key => {
+                let upperKey = key.toUpperCase();
+                if (!seen.has(upperKey)) { seen.add(upperKey); coinKeys.push(key); }
+            });
+            if (rawKeys.length !== coinKeys.length) {
+                document.getElementById('duplicate-warning').style.display = 'block';
+            } else {
+                document.getElementById('duplicate-warning').style.display = 'none';
+            }
+            updateMarket();
+            updateSellModal();
+            updateCoinList();
+        } else {
+            document.getElementById('market-grid').innerHTML = `
+                <div style="grid-column:1/-1; text-align:center; padding:30px; color:#64748b;">
+                    <div style="font-size:48px; margin-bottom:10px;">📭</div>
+                    <p>No coins available</p>
+                    <p style="font-size:12px; margin-top:5px;">Please add coins from System Settings</p>
+                </div>
+            `;
+            document.getElementById('coin-list-container').innerHTML = `
+                <p style="color:#64748b; text-align:center; padding:10px;">No coins added yet. Add a coin above.</p>
+            `;
+        }
+    });
+
+    const ordersQuery = query(collection(db, "orders"), orderBy("timestamp", "desc"));
+    onSnapshotCollection(ordersQuery, (snapshot) => {
+        orders = [];
+        snapshot.forEach((doc) => { orders.push({ id: doc.id, ...doc.data() }); });
+        updateHistory();
+        if (document.getElementById('admin-orders').style.display !== 'none') { updateOrdersList(); }
+    });
+
+    function showSuccess(msg) {
+        const el = document.getElementById('success-msg');
+        el.textContent = '✅ ' + msg;
+        el.style.display = 'block';
+        setTimeout(() => { el.style.display = 'none'; }, 3000);
+    }
+
+    function updateMarket() {
+        const grid = document.getElementById('market-grid');
+        let html = '';
+        let hasBuy = false;
+        if (coinKeys.length === 0) {
+            grid.innerHTML = `
+                <div style="grid-column:1/-1; text-align:center; padding:30px; color:#64748b;">
+                    <div style="font-size:48px; margin-bottom:10px;">📭</div>
+                    <p>No coins available</p>
+                    <p style="font-size:12px; margin-top:5px;">Please add coins from System Settings</p>
+                </div>
+            `;
+            return;
+        }
+        coinKeys.forEach(key => {
+            const rate = marketData[key] || 0;
+            const status = marketData[key + '_status'] || 'active';
+            const isBuy = status === 'buy';
+            if (isBuy) hasBuy = true;
+            let statusText = status === 'active' ? (isSellingOpen ? 'Active' : 'Closed') : 'Buy';
+            let statusClass = status === 'active' ? (isSellingOpen ? 'active' : 'closed') : 'buy';
+            html += `<div class="market-card"><div class="coin-name">${key}<span class="coin-status ${statusClass}">${statusText}</span></div><div class="coin-rate">${rate}৳</div><div class="coin-per">Per 1,000 Coins</div></div>`;
         });
+        grid.innerHTML = html;
+        document.getElementById('buy-stop-badge').style.display = hasBuy ? 'block' : 'none';
+    }
 
-        const ordersQuery = query(collection(db, "orders"), orderBy("timestamp", "desc"));
-        onSnapshotCollection(ordersQuery, (snapshot) => {
-            orders = [];
-            snapshot.forEach((doc) => { orders.push({ id: doc.id, ...doc.data() }); });
-            updateHistory();
-            if (document.getElementById('admin-orders').style.display !== 'none') { updateOrdersList(); }
-        });
-
-        function showSuccess(msg) {
-            const el = document.getElementById('success-msg');
-            el.textContent = ' ' + msg;
-            el.style.display = 'block';
-            setTimeout(() => { el.style.display = 'none'; }, 3000);
+    function updateCoinList() {
+        const container = document.getElementById('coin-list-container');
+        if (coinKeys.length === 0) {
+            container.innerHTML = '<p style="color:#64748b; text-align:center; padding:10px;">No coins added yet. Add a coin above.</p>';
+            return;
         }
-
-        function updateMarket() {
-            const grid = document.getElementById('market-grid');
-            let html = '';
-            let hasBuy = false;
-            coinKeys.forEach(key => {
-                const rate = marketData[key] || 0;
-                const status = marketData[key + '_status'] || 'active';
-                const isBuy = status === 'buy';
-                if (isBuy) hasBuy = true;
-                let statusText = status === 'active' ? (isSellingOpen ? 'Active' : 'Closed') : 'Buy';
-                let statusClass = status === 'active' ? (isSellingOpen ? 'active' : 'closed') : 'buy';
-                html += `<div class="market-card"><div class="coin-name">${key}<span class="coin-status ${statusClass}">${statusText}</span></div><div class="coin-rate">${rate}</div><div class="coin-per">Per 1,000 Coins</div></div>`;
-            });
-            grid.innerHTML = html || '<div style="grid-column:1/-1; text-align:center; color:#64748b; padding:20px;">No coins available.</div>';
-            document.getElementById('buy-stop-badge').style.display = hasBuy ? 'block' : 'none';
-        }
-
-        function updateCoinList() {
-            const container = document.getElementById('coin-list-container');
-            if (coinKeys.length === 0) { container.innerHTML = '<p style="color:#64748b; text-align:center; padding:10px;">No coins added yet</p>'; return; }
-            let html = '';
-            coinKeys.forEach(key => {
-                const rate = marketData[key] || 0;
-                const sendTo = coinSendTo[key] || 'N/A';
-                html += `<div class="coin-list-item"><span class="coin-name">${key}</span><span class="coin-rate">${rate}</span><span class="coin-sendto"> ${sendTo}</span><button class="delete-coin-btn" onclick="window.deleteCoin('${key}')"></button></div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        function updateHistory() {
-            const tbody = document.getElementById('history-body');
-            if (orders.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#64748b; padding:20px;">No history yet</td></tr>'; return; }
-            let html = '';
-            orders.slice(0, 10).forEach(order => {
-                const statusClass = order.status === 'approved' ? 'status-approved' : order.status === 'rejected' ? 'status-rejected' : 'status-pending';
-                const statusText = order.status === 'approved' ? ' Approved' : order.status === 'rejected' ? ' Rejected' : ' Pending';
-                html += `<tr><td>${new Date(order.timestamp?.seconds * 1000).toLocaleString()}</td><td><span class="coin-name">${order.coin}</span></td><td class="amount">${order.amount}</td><td><span class="${statusClass}">${statusText}</span></td></tr>`;
-            });
-            tbody.innerHTML = html;
-        }
-
-        function updateSellModal() {
-            const select = document.getElementById('sell-coin-select');
-            select.innerHTML = '';
-            coinKeys.forEach(key => {
-                const option = document.createElement('option');
-                option.value = key;
-                const rate = marketData[key] || 0;
-                option.textContent = key + ' (' + rate + ')';
-                select.appendChild(option);
-            });
-            updateSellForm();
-        }
-
-        function updateSellForm() {
-            const key = document.getElementById('sell-coin-select').value;
-            if (!key) return;
+        let html = '';
+        coinKeys.forEach(key => {
             const rate = marketData[key] || 0;
             const sendTo = coinSendTo[key] || 'N/A';
-            document.getElementById('sell-rate-display').textContent = rate;
-            document.getElementById('amount-label').textContent = ' Amount to Sell (MIN 20000)';
-            document.getElementById('amount-input').min = 20000;
-            document.getElementById('amount-input').value = 20000;
-            const sendToBox = document.getElementById('sell-send-to');
-            sendToBox.style.display = 'block';
-            const usernameEl = document.getElementById('sell-send-to-username');
-            usernameEl.textContent = sendTo;
-            usernameEl.style.color = sendTo === 'N/A' ? '#ef4444' : '#22c55e';
-            document.querySelector('.fee-info').textContent = ' Withdrawal Fee: ' + withdrawalFee + ' will be deducted from your total';
-            document.getElementById('coupon-group').style.display = 'none';
-            document.getElementById('username-group').style.display = 'block';
-            updatePaymentLabel();
+            html += `<div class="coin-list-item"><span class="coin-name">${key}</span><span class="coin-rate">${rate}৳</span><span class="coin-sendto">📤 ${sendTo}</span><button class="delete-coin-btn" onclick="window.deleteCoin('${key}')">✕</button></div>`;
+        });
+        container.innerHTML = html;
+    }
+
+    function updateHistory() {
+        const tbody = document.getElementById('history-body');
+        if (orders.length === 0) { tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#64748b; padding:20px;">No history yet</td></tr>'; return; }
+        let html = '';
+        orders.slice(0, 10).forEach(order => {
+            const statusClass = order.status === 'approved' ? 'status-approved' : order.status === 'rejected' ? 'status-rejected' : 'status-pending';
+            const statusText = order.status === 'approved' ? '✅ Approved' : order.status === 'rejected' ? '❌ Rejected' : '⏳ Pending';
+            html += `<tr><td>${new Date(order.timestamp?.seconds * 1000).toLocaleString()}</td><td><span class="coin-name">${order.coin}</span></td><td class="amount">${order.amount}</td><td><span class="${statusClass}">${statusText}</span></td></tr>`;
+        });
+        tbody.innerHTML = html;
+    }
+
+    function updateSellModal() {
+        const select = document.getElementById('sell-coin-select');
+        select.innerHTML = '';
+        if (coinKeys.length === 0) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = 'No coins available';
+            select.appendChild(option);
+            return;
         }
+        coinKeys.forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            const rate = marketData[key] || 0;
+            option.textContent = key + ' (' + rate + '৳)';
+            select.appendChild(option);
+        });
+        updateSellForm();
+    }
 
-        function updatePaymentLabel() {
-            const method = document.getElementById('payment-method').value;
-            const label = document.getElementById('payment-label');
-            if (method === 'Binance') {
-                label.textContent = 'Enter your Binance ID / Email';
-                document.getElementById('payment-input').placeholder = 'Binance ID or Email';
-            } else {
-                label.textContent = 'Enter your ' + method + ' number';
-                document.getElementById('payment-input').placeholder = '01XXXXXXXXX';
-            }
+    function updateSellForm() {
+        const key = document.getElementById('sell-coin-select').value;
+        if (!key || key === '') {
+            document.getElementById('sell-rate-display').textContent = '0';
+            document.getElementById('sell-send-to').style.display = 'none';
+            document.querySelector('.fee-info').textContent = '💰 No coins available';
+            return;
         }
+        const rate = marketData[key] || 0;
+        const sendTo = coinSendTo[key] || 'N/A';
+        document.getElementById('sell-rate-display').textContent = rate;
+        document.getElementById('amount-label').textContent = '💰 Amount to Sell (MIN 20000)';
+        document.getElementById('amount-input').min = 20000;
+        document.getElementById('amount-input').value = 20000;
+        const sendToBox = document.getElementById('sell-send-to');
+        sendToBox.style.display = 'block';
+        const usernameEl = document.getElementById('sell-send-to-username');
+        usernameEl.textContent = sendTo;
+        usernameEl.style.color = sendTo === 'N/A' ? '#ef4444' : '#22c55e';
+        document.querySelector('.fee-info').textContent = '💰 Withdrawal Fee: ' + withdrawalFee + '৳ will be deducted from your total';
+        document.getElementById('coupon-group').style.display = 'none';
+        document.getElementById('username-group').style.display = 'block';
+        updatePaymentLabel();
+    }
 
-        function openSell() { document.getElementById('sell-modal').classList.add('active'); updateSellModal(); }
-        function closeSell() { document.getElementById('sell-modal').classList.remove('active'); }
-
-        function handleFileSelect(event) {
-            const file = event.target.files[0];
-            if (file) { document.getElementById('file-name').textContent = file.name; }
+    function updatePaymentLabel() {
+        const method = document.getElementById('payment-method').value;
+        const label = document.getElementById('payment-label');
+        if (method === 'Binance') {
+            label.textContent = 'Enter your Binance ID / Email';
+            document.getElementById('payment-input').placeholder = 'Binance ID or Email';
+        } else {
+            label.textContent = 'Enter your ' + method + ' number';
+            document.getElementById('payment-input').placeholder = '01XXXXXXXXX';
         }
+    }
 
-        async function submitSell() {
-            const coinKey = document.getElementById('sell-coin-select').value;
-            const amount = parseInt(document.getElementById('amount-input').value);
-            const payment = document.getElementById('payment-method').value;
-            const paymentNumber = document.getElementById('payment-input').value;
-            const sender = document.getElementById('sender-username')?.value || '';
-            if (!amount || amount < 20000) { alert('Minimum amount is 20000'); return; }
-            if (!paymentNumber) { alert('Please enter your payment ' + (payment === 'Binance' ? 'ID/Email' : 'number')); return; }
-            if (!sender) { alert('Please enter your username'); return; }
-            const fee = withdrawalFee;
-            const afterFee = amount - fee;
-            if (afterFee < 0) { alert('Amount is too low! After fee deduction, amount would be negative.'); return; }
-            const userId = currentUser?.id || 'unknown';
-            const userName = currentUser?.username || 'unknown';
-            const sendTo = coinSendTo[coinKey] || 'N/A';
-            try {
-                await addDoc(collection(db, "orders"), {
-                    userId: String(userId), userName: userName, coin: coinKey, amount: amount,
-                    payment: payment, paymentNumber: paymentNumber, sender: sender, sendTo: sendTo,
-                    fee: fee, totalAfterFee: afterFee, status: 'pending', timestamp: new Date(),
-                    rate: marketData[coinKey] || 0
-                });
-                alert(' Order submitted!\n Send to: ' + sendTo + '\n Amount: ' + amount + '\n Fee: ' + fee + '\n You\'ll receive: ' + afterFee + '');
-                closeSell();
-                document.getElementById('file-name').textContent = 'No file chosen';
-                document.getElementById('file-input').value = '';
-            } catch(e) { alert('Error: ' + e.message); }
-        }
+    function openSell() { document.getElementById('sell-modal').classList.add('active'); updateSellModal(); }
+    function closeSell() { document.getElementById('sell-modal').classList.remove('active'); }
 
-        function joinChannel() { window.open('https://t.me/in_tx_bd', '_blank'); }
+    function handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (file) { document.getElementById('file-name').textContent = file.name; }
+    }
 
-        function openAdminPassword() {
-            document.getElementById('password-modal').classList.add('active');
-            document.getElementById('admin-password').value = '';
-            document.getElementById('admin-password').focus();
-        }
-        function closePassword() { document.getElementById('password-modal').classList.remove('active'); }
-
-        function verifyPassword() {
-            const password = document.getElementById('admin-password').value;
-            const input = document.getElementById('admin-password');
-            if (password === ADMIN_PASSWORD) { closePassword(); openAdmin(); }
-            else {
-                input.classList.add('error-shake');
-                input.style.borderColor = '#ef4444';
-                input.value = '';
-                setTimeout(() => { input.classList.remove('error-shake'); input.style.borderColor = ''; }, 500);
-                alert(' Wrong password!');
-            }
-        }
-        document.getElementById('admin-password').addEventListener('keydown', function(e) { if (e.key === 'Enter') { verifyPassword(); } });
-
-        function openAdmin() {
-            document.getElementById('admin-modal').classList.add('active');
-            document.getElementById('admin-selling-status').value = isSellingOpen ? 'true' : 'false';
-            document.getElementById('admin-fee-amount').value = withdrawalFee;
-            updateOrdersList();
-        }
-        function closeAdmin() { document.getElementById('admin-modal').classList.remove('active'); }
-
-        function switchTab(tab) {
-            document.getElementById('admin-rates').style.display = tab === 'rates' ? 'block' : 'none';
-            document.getElementById('admin-orders').style.display = tab === 'orders' ? 'block' : 'none';
-            document.getElementById('tab-rates-btn').className = tab === 'rates' ? 'active' : 'inactive';
-            document.getElementById('tab-orders-btn').className = tab === 'orders' ? 'active' : 'inactive';
-            if (tab === 'orders') { updateOrdersList(); }
-        }
-
-        function updateOrdersList() {
-            const container = document.getElementById('orders-list');
-            if (orders.length === 0) { container.innerHTML = '<p style="color:#64748b; text-align:center; padding:20px;">No orders yet</p>'; return; }
-            let html = '';
-            orders.forEach(order => {
-                const statusColor = order.status === 'approved' ? '#22c55e' : order.status === 'rejected' ? '#ef4444' : '#f59e0b';
-                html += `<div class="order-card"><div class="order-header"><span class="order-coin">${order.coin}</span><span class="order-status" style="color:${statusColor}">${order.status.toUpperCase()}</span></div><div class="order-details"><div>User: @${order.userName} (${order.userId})</div><div>Amount: ${order.amount} | Fee: ${order.fee || 0}</div><div>After Fee: ${order.totalAfterFee || order.amount}</div><div>Payment: ${order.payment} (${order.paymentNumber})</div>${order.sender ? `<div>Sender: ${order.sender}</div>` : ''}${order.sendTo ? `<div> Send To: ${order.sendTo}</div>` : ''}<div style="font-size:10px; color:#475569; margin-top:4px;">${new Date(order.timestamp?.seconds * 1000).toLocaleString()}</div></div>${order.status === 'pending' ? `<div class="order-actions"><button class="approve-btn" onclick="window.approveOrder('${order.id}')"> Approve</button><button class="reject-btn" onclick="window.rejectOrder('${order.id}')"> Reject</button></div>` : ''}</div>`;
+    async function submitSell() {
+        const coinKey = document.getElementById('sell-coin-select').value;
+        if (!coinKey || coinKey === '') { alert('No coins available! Please add coins first.'); return; }
+        const amount = parseInt(document.getElementById('amount-input').value);
+        const payment = document.getElementById('payment-method').value;
+        const paymentNumber = document.getElementById('payment-input').value;
+        const sender = document.getElementById('sender-username')?.value || '';
+        if (!amount || amount < 20000) { alert('Minimum amount is 20000'); return; }
+        if (!paymentNumber) { alert('Please enter your payment ' + (payment === 'Binance' ? 'ID/Email' : 'number')); return; }
+        if (!sender) { alert('Please enter your username'); return; }
+        const fee = withdrawalFee;
+        const afterFee = amount - fee;
+        if (afterFee < 0) { alert('Amount is too low! After fee deduction, amount would be negative.'); return; }
+        const userId = currentUser?.id || 'unknown';
+        const userName = currentUser?.username || 'unknown';
+        const sendTo = coinSendTo[coinKey] || 'N/A';
+        try {
+            await addDoc(collection(db, "orders"), {
+                userId: String(userId), userName: userName, coin: coinKey, amount: amount,
+                payment: payment, paymentNumber: paymentNumber, sender: sender, sendTo: sendTo,
+                fee: fee, totalAfterFee: afterFee, status: 'pending', timestamp: new Date(),
+                rate: marketData[coinKey] || 0
             });
-            container.innerHTML = html;
-        }
+            alert('✅ Order submitted!\n📤 Send to: ' + sendTo + '\n💰 Amount: ' + amount + '৳\n📉 Fee: ' + fee + '৳\n💵 You\'ll receive: ' + afterFee + '৳');
+            closeSell();
+            document.getElementById('file-name').textContent = 'No file chosen';
+            document.getElementById('file-input').value = '';
+        } catch(e) { alert('Error: ' + e.message); }
+    }
 
-        async function approveOrder(orderId) {
+    function joinChannel() { window.open('https://t.me/in_tx_bd', '_blank'); }
+
+    function openAdminPassword() {
+        document.getElementById('password-modal').classList.add('active');
+        document.getElementById('admin-password').value = '';
+        document.getElementById('admin-password').focus();
+    }
+    function closePassword() { document.getElementById('password-modal').classList.remove('active'); }
+
+    function verifyPassword() {
+        const password = document.getElementById('admin-password').value;
+        const input = document.getElementById('admin-password');
+        if (password === ADMIN_PASSWORD) { closePassword(); openAdmin(); }
+        else {
+            input.classList.add('error-shake');
+            input.style.borderColor = '#ef4444';
+            input.value = '';
+            setTimeout(() => { input.classList.remove('error-shake'); input.style.borderColor = ''; }, 500);
+            alert('❌ Wrong password!');
+        }
+    }
+    document.getElementById('admin-password').addEventListener('keydown', function(e) { if (e.key === 'Enter') { verifyPassword(); } });
+
+    function openAdmin() {
+        document.getElementById('admin-modal').classList.add('active');
+        document.getElementById('admin-selling-status').value = isSellingOpen ? 'true' : 'false';
+        document.getElementById('admin-fee-amount').value = withdrawalFee;
+        updateOrdersList();
+    }
+    function closeAdmin() { document.getElementById('admin-modal').classList.remove('active'); }
+
+    function switchTab(tab) {
+        document.getElementById('admin-rates').style.display = tab === 'rates' ? 'block' : 'none';
+        document.getElementById('admin-orders').style.display = tab === 'orders' ? 'block' : 'none';
+        document.getElementById('tab-rates-btn').className = tab === 'rates' ? 'active' : 'inactive';
+        document.getElementById('tab-orders-btn').className = tab === 'orders' ? 'active' : 'inactive';
+        if (tab === 'orders') { updateOrdersList(); }
+    }
+
+    function updateOrdersList() {
+        const container = document.getElementById('orders-list');
+        if (orders.length === 0) { container.innerHTML = '<p style="color:#64748b; text-align:center; padding:20px;">No orders yet</p>'; return; }
+        let html = '';
+        orders.forEach(order => {
+            const statusColor = order.status === 'approved' ? '#22c55e' : order.status === 'rejected' ? '#ef4444' : '#f59e0b';
+            html += `<div class="order-card"><div class="order-header"><span class="order-coin">${order.coin}</span><span class="order-status" style="color:${statusColor}">${order.status.toUpperCase()}</span></div><div class="order-details"><div>User: @${order.userName} (${order.userId})</div><div>Amount: ${order.amount}৳ | Fee: ${order.fee || 0}৳</div><div>After Fee: ${order.totalAfterFee || order.amount}৳</div><div>Payment: ${order.payment} (${order.paymentNumber})</div>${order.sender ? `<div>Sender: ${order.sender}</div>` : ''}${order.sendTo ? `<div>📤 Send To: ${order.sendTo}</div>` : ''}<div style="font-size:10px; color:#475569; margin-top:4px;">${new Date(order.timestamp?.seconds * 1000).toLocaleString()}</div></div>${order.status === 'pending' ? `<div class="order-actions"><button class="approve-btn" onclick="window.approveOrder('${order.id}')">✅ Approve</button><button class="reject-btn" onclick="window.rejectOrder('${order.id}')">❌ Reject</button></div>` : ''}</div>`;
+        });
+        container.innerHTML = html;
+  } async function approveOrder(orderId) {
             if (confirm('Approve this order?')) {
-                try { await updateDoc(doc(db, "orders", orderId), { status: 'approved', approvedAt: new Date() }); alert(' Order approved!'); }
+                try { await updateDoc(doc(db, "orders", orderId), { status: 'approved', approvedAt: new Date() }); alert('✅ Order approved!'); }
                 catch(e) { alert('Error: ' + e.message); }
             }
         }
         async function rejectOrder(orderId) {
             if (confirm('Reject this order?')) {
-                try { await updateDoc(doc(db, "orders", orderId), { status: 'rejected', rejectedAt: new Date() }); alert(' Order rejected!'); }
+                try { await updateDoc(doc(db, "orders", orderId), { status: 'rejected', rejectedAt: new Date() }); alert('❌ Order rejected!'); }
                 catch(e) { alert('Error: ' + e.message); }
             }
         }
@@ -595,14 +641,14 @@
                 await setDoc(doc(db, "rates", "market"), { withdrawalFee: fee }, { merge: true });
                 coinSendTo[name] = sendTo;
                 withdrawalFee = fee;
-                showSuccess(name + ' updated! Fee: ' + fee + '');
+                showSuccess(name + ' updated! Fee: ' + fee + '৳');
                 updateMarket(); updateSellModal(); updateCoinList(); closeAdmin();
             } catch(e) { alert('Error: ' + e.message); }
         }
 
         async function updateSellingStatus() {
             const status = document.getElementById('admin-selling-status').value === 'true';
-            try { await updateDoc(doc(db, "rates", "market"), { isSellingOpen: status }); alert(' Selling status updated to: ' + (status ? 'Open' : 'Closed')); }
+            try { await updateDoc(doc(db, "rates", "market"), { isSellingOpen: status }); alert('✅ Selling status updated to: ' + (status ? 'Open' : 'Closed')); }
             catch(e) { alert('Error: ' + e.message); }
         }
 
@@ -617,7 +663,7 @@
         }
 
         async function deleteAllCoins() {
-            if (confirm(' Delete ALL coins? This cannot be undone!')) {
+            if (confirm('⚠️ Delete ALL coins? This cannot be undone!')) {
                 try {
                     const docRef = doc(db, "rates", "market");
                     const data = marketData;
